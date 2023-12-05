@@ -45,26 +45,17 @@
         </td>
     </tr>
     <tr>
-        <td colspan="7" rowspan="2" valign="top">
-            <div class="titulo">Beneficiário</div>
-            <div class="conteudo float_left"><?php echo $cedente ?><br /><?=$cedente_endereco1;?><br /><?=$cedente_endereco2;?></div>
-            <div class="conteudo cpf_cnpj"><?php echo $cedente_cpf_cnpj ?></div>
-            
-
+        <td colspan="7">
+            <div class="titulo">Cedente</div>
+            <div class="conteudo"><?php echo $cedente ?></div>
         </td>
         <td>
-            <div class="titulo">Agência/Código beneficiário</div>
+            <div class="titulo">Agência/Código cedente</div>
             <div class="conteudo rtl"><?php echo $agencia_codigo_cedente ?></div>
         </td>
     </tr>
     <tr>
-        <td>
-            <div class="titulo">Nosso número</div>
-            <div class="conteudo rtl"><?php echo $nosso_numero ?></div>
-        </td>
-    </tr>
-    <tr>
-        <td width="110" colspan="2">
+        <td width="140" colspan="2">
             <div class="titulo">Data do documento</div>
             <div class="conteudo"><?php echo $data_documento ?></div>
         </td>
@@ -85,19 +76,19 @@
             <div class="conteudo"><?php echo $data_processamento ?></div>
         </td>
         <td>
-            <div class="titulo">(=) Valor do Documento</div>
-            <div class="conteudo rtl"><?php echo $valor_documento ?></div>
+            <div class="titulo">Nosso número</div>
+            <div class="conteudo rtl"><?php echo $nosso_numero ?></div>
         </td>
     </tr>
     <tr>
-        <?php if (isset($esconde_uso_banco) && !$esconde_uso_banco) : ?>
+        <?php if (!$esconde_uso_banco) : ?>
             <td<?php if (!$mostra_cip) : ?> colspan="2"<?php endif ?>>
                 <div class="titulo">Uso do banco</div>
                 <div class="conteudo"><?php echo $uso_banco ?></div>
             </td>
         <?php endif; ?>
 
-        <?php if (isset($mostra_cip) && $mostra_cip) : ?>
+        <?php if ($mostra_cip) : ?>
             <!-- Campo exclusivo do Bradesco -->
             <td width="20">
                 <div class="titulo">CIP</div>
@@ -105,7 +96,7 @@
             </td>
         <?php endif ?>
 
-        <td<?php if (isset($esconde_uso_banco) && $esconde_uso_banco) : ?> colspan="3"<?php endif; ?>>
+        <td<?php if ($esconde_uso_banco) : ?> <?php endif; ?>>
             <div class="titulo">Carteira</div>
             <div class="conteudo"><?php echo $carteira ?></div>
         </td>
@@ -119,7 +110,16 @@
         </td>
         <td width="110">
             <div class="titulo">Valor</div>
-            <div class="conteudo"><?php echo $valor_unitario ?></div>
+            <div class="conteudo"></div>
+        </td>
+        <td>
+            <div class="titulo">(=) Valor do Documento</div>
+            <div class="conteudo rtl"><?php echo $valor_documento ?></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="7">
+            <div class="titulo">Instruções (Texto de responsabilidade do cedente)</div>
         </td>
         <td>
             <div class="titulo">(-) Descontos / Abatimentos</div>
@@ -127,22 +127,13 @@
         </td>
     </tr>
     <tr>
-        <td colspan="7" valign="top">
-            <div class="titulo">Instruções (Texto de responsabilidade do beneficiário)</div>
-        </td>
-        <td>
-            <div class="titulo">(-) Outras deduções</div>
-            <div class="conteudo rtl"><?php echo $outras_deducoes ?></div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="7" class="notopborder" valign="top">
+        <td colspan="7" class="notopborder">
             <div class="conteudo"><?php echo $instrucoes[0]; ?></div>
             <div class="conteudo"><?php echo $instrucoes[1]; ?></div>
         </td>
         <td>
-            <div class="titulo">(+) Mora / Multa</div>
-            <div class="conteudo rtl"><?php echo $mora_multa ?></div>
+            <div class="titulo">(-) Outras deduções</div>
+            <div class="conteudo rtl"><?php echo $outras_deducoes ?></div>
         </td>
     </tr>
     <tr>
@@ -151,8 +142,8 @@
             <div class="conteudo"><?php echo $instrucoes[3]; ?></div>
         </td>
         <td>
-            <div class="titulo">(+) Outros acréscimos</div>
-            <div class="conteudo rtl"><?php echo $outros_acrescimos ?></div>
+            <div class="titulo">(+) Mora / Multa</div>
+            <div class="conteudo rtl"><?php echo $mora_multa ?></div>
         </td>
     </tr>
     <tr>
@@ -161,16 +152,27 @@
             <div class="conteudo"><?php echo $instrucoes[5]; ?></div>
         </td>
         <td>
+            <div class="titulo">(+) Outros acréscimos</div>
+            <div class="conteudo rtl"><?php echo $outros_acrescimos ?></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="7" class="notopborder">
+            <div class="conteudo"><?php echo $instrucoes[6]; ?></div>
+            <div class="conteudo"><?php echo $instrucoes[7]; ?></div>
+        </td>
+        <td>
             <div class="titulo">(=) Valor cobrado</div>
             <div class="conteudo rtl"><?php echo $valor_cobrado ?></div>
         </td>
     </tr>
     <tr>
-        <td colspan="7" valign="top">
-            <div class="titulo">Pagador</div>
-            <div class="conteudo float_left"><?php echo $sacado ?><br />
-            <?=$sacado_endereco1;?><br /><?=$sacado_endereco2;?></div>
-            <div class="conteudo cpf_cnpj"><?php echo $sacado_documento; ?></div>
+        <td colspan="7">
+            <div class="titulo">Sacado</div>
+            <div class="conteudo"><?php echo $sacado ?></div>
+            <div class="conteudo"><?php echo $sacado_endereco1 ?></div>
+            <div class="conteudo"><?php echo $sacado_endereco2 ?></div>
+
         </td>
         <td class="noleftborder">
             <div class="titulo" style="margin-top: 50px">Cód. Baixa</div>
@@ -179,7 +181,7 @@
 
     <tr>
         <td colspan="6" class="noleftborder">
-            <div class="titulo">Pagador / Avalista <div class="conteudo pagador"><?php echo $sacador_avalista; ?></div></div>
+            <div class="titulo">Sacador/Avalista <div class="conteudo sacador"><?php echo $sacador_avalista; ?></div></div>
         </td>
         <td colspan="2" class="norightborder noleftborder">
             <div class="conteudo noborder rtl">Autenticação mecânica - Ficha de Compensação</div>

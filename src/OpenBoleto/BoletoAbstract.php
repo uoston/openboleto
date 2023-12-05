@@ -161,12 +161,6 @@ abstract class BoletoAbstract
     protected $numeroDocumento;
 
     /**
-     * Número da parcelas
-     * @var int
-     */
-    protected $numParcelas;
-
-    /**
      * Define o número sequencial definido pelo cliente para compor o Nosso Número
      *
      * @var int
@@ -280,20 +274,13 @@ abstract class BoletoAbstract
      * @var string
      */
     protected $logoBanco;
-    
-    /**
-    * Array que sera exportada pelo metodo getData
-    * @var array
-    */
-    protected $data;
 
     /**
-     * Imprime ou não as instruções de impressão
-     * @var array
+     * qrcode, imagem em base64. formato svg.
+     * @var string
      */
-    protected $imprimeInstrucoesImpressao = true;
-    
-    
+    protected $qrcode;
+
     /**
      * Construtor
      *
@@ -329,6 +316,29 @@ abstract class BoletoAbstract
         }
     }
 
+    /**
+     * Define o qrcode
+     *
+     * @param string $qrcode
+     * @return BoletoAbstract
+     */
+    public function setQrCode($qrcode)
+    {
+        $this->qrcode = $qrcode;
+        return $this;
+    }
+
+    /**
+     * Retorna o qrcode
+     *
+     * @return string
+     */
+    public function getQrcode()
+    {
+        return $this->qrcode;
+    }
+    
+    
     /**
      * Define a agência
      *
@@ -607,19 +617,6 @@ abstract class BoletoAbstract
     public function setNumeroDocumento($numeroDocumento)
     {
         $this->numeroDocumento = $numeroDocumento;
-        return $this;
-    }
-    
-    /**
-     * Define o Número da parcela
-     *
-     * @param int $numParcelas
-     * @return BoletoAbstract
-     */
-    public function setNumParcelas($numParcelas)
-    {
-        //echo $numParcelas;
-        $this->numParcelas = $numParcelas;
         return $this;
     }
 
@@ -1074,28 +1071,6 @@ abstract class BoletoAbstract
     {
         return $this->resourcePath;
     }
-    
-    /**
-     * Define se imprime ou não as instruções de impressão
-     *
-     * @param bool $imprimeInstrucoesImpressao
-     * @return BoletoAbstract
-     */
-    public function setImprimeInstrucoesImpressao($imprimeInstrucoesImpressao)
-    {
-        $this->imprimeInstrucoesImpressao = $imprimeInstrucoesImpressao;
-        return $this;
-    }
-    
-    /**
-     * Retorna se imprime ou não as instruções de impressão
-     *
-     * @return bool
-     */
-    public function getImprimeInstrucoesImpressao()
-    {
-        return $this->imprimeInstrucoesImpressao;
-    }
 
     /**
      * Define a localização do logotipo do banco relativo à pasta de imagens
@@ -1238,7 +1213,7 @@ abstract class BoletoAbstract
     {
         ob_start();
 
-        $this->data = array(
+        extract(array(
             'linha_digitavel' => $this->getLinhaDigitavel(),
             'cedente' => $this->getCedente()->getNome(),
             'cedente_cpf_cnpj' => $this->getCedente()->getDocumento(),
@@ -1261,10 +1236,7 @@ abstract class BoletoAbstract
             'valor_cobrado' => static::formataDinheiro($this->getValorCobrado()),
             'valor_unitario' => static::formataDinheiro($this->getValorUnitario()),
             'sacador_avalista' => $this->getSacadorAvalista() ? $this->getSacadorAvalista()->getNomeDocumento() : null,
-            'sacador_avalista_endereco1' => $this->getSacadorAvalista() ? $this->getSacadorAvalista()->getEndereco() : null,
-            'sacador_avalista_endereco2' => $this->getSacadorAvalista() ? $this->getSacadorAvalista()->getCepCidadeUf() : null,
             'sacado' => $this->getSacado()->getNome(),
-            'sacado_documento' => $this->getSacado()->getDocumento(),
             'sacado_endereco1' => $this->getSacado()->getEndereco(),
             'sacado_endereco2' => $this->getSacado()->getCepCidadeUf(),
             'demonstrativo' => (array) $this->getDescricaoDemonstrativo() + array(null, null, null, null, null), // Max: 5 linhas
@@ -1279,20 +1251,14 @@ abstract class BoletoAbstract
             'uso_banco' => $this->getUsoBanco(),
             'codigo_barras' => $this->getImagemCodigoDeBarras(),
             'resource_path' => $this->getResourcePath(),
-            'numero_febraban' => $this->getNumeroFebraban(),
-            'imprime_instrucoes_impressao' => $this->getImprimeInstrucoesImpressao()
-        );
-        
-        
-        
-        $this->data = array_merge($this->data,$this->getViewVars());
-        
-        extract($this->data);
+            'qrcode' => $this->getQrcode(),
+        ));
+
+        // Override view variables when rendering
+        extract($this->getViewVars());
 
         // Ignore errors inside the template
-        if ($this->getLayout() != 'jasper.phtml') {
-            @include $this->getResourcePath() . '/views/' . $this->getLayout();
-        }
+        @include $this->getResourcePath() . '/views/' . $this->getLayout();
 
         return ob_get_clean();
     }
@@ -1304,8 +1270,8 @@ abstract class BoletoAbstract
      */
     public function getAgenciaCodigoCedente()
     {
-        $agencia = $this->getAgenciaDv() !== null ? $this->getAgencia() . '-' . $this->getAgenciaDv() : $this->getAgencia();
-        $conta = $this->getContaDv() !== null ? $this->getConta() . '-' . $this->getContaDv() : $this->getConta();
+        $agencia = $this->getAgenciaDv() ? $this->getAgencia() . '-' . $this->getAgenciaDv() : $this->getAgencia();
+        $conta = $this->getContaDv() ? $this->getConta() . '-' . $this->getContaDv() : $this->getConta();
         return $agencia . ' / ' . $conta;
     }
 
@@ -1467,20 +1433,6 @@ abstract class BoletoAbstract
         '<div class="white thin"></div>' .
         '<div class="black thin"></div>' .
         '</div>';
-    }
-    
-    /**
-    * Retorna os dados do boleto em um array para ser usado externamente
-    *
-    * @return array
-    */
-    public function getData()
-    {
-        if(empty($this->data))
-        {
-            $this->getOutput();  
-        }  
-        return $this->data;               
     }
 
     /**
