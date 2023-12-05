@@ -138,8 +138,27 @@ body{
     background: #ccc;
 }
 
+img {
+    margin-bottom: -5px;
+}
+.table-qrcode {
+    width: 100%; /* Defina a largura total da tabela */
+    border-collapse: collapse; /* Remova as bordas entre as células */
+}
+.instrucao {
+    /* Defina a largura da coluna da instrução */
+    width: 100%;
+    white-space: nowrap; /* Impede a quebra de linha */    
+}
+.td {
+    vertical-align: top; /* Alinha todas as células no topo */
+}
+.qrcode img {
+    max-width: 100%; /* Faça a imagem responsiva dentro da célula do Qrcode */
+    height: auto;
+}
 .info {
-    font: 11px Arial;
+    font: 9px Arial;    
 }
 
 .info-empresa {

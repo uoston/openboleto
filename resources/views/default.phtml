@@ -35,20 +35,39 @@
 
     <div style="width: 666px">
     	<?php if ($imprime_instrucoes_impressao) :?>
-        <div class="noprint info">
-            <h2>Instruções de Impressão</h2>
-            <ul>
-                <li>Imprima em impressora jato de tinta (ink jet) ou laser em qualidade normal ou alta (Não use modo econômico).</li>
-                <li>Utilize folha A4 (210 x 297 mm) ou Carta (216 x 279 mm) e margens mínimas à esquerda e à direita do formulário.</li>
-                <li>Corte na linha indicada. Não rasure, risque, fure ou dobre a região onde se encontra o código de barras.</li>
-                <li>Caso não apareça o código de barras no final, pressione F5 para atualizar esta tela.</li>
-                <li>Caso tenha problemas ao imprimir, copie a sequencia numérica abaixo e pague no caixa eletrônico ou no internet banking:</li>
-            </ul>
-            <span class="header">Linha Digitável: <?php echo $linha_digitavel; ?></span>
-            <?php if ($valor_documento) : ?><span class="header">Valor: R$ <?php echo $valor_documento; ?></span><?php endif ?>
-            <?php if ($pagamento_minimo) : ?><span class="header">Pagamento mínimo: R$ <?php echo $pagamento_minimo; ?></span><?php endif ?>
-            <br>
-            <div class="linha-pontilhada" style="margin-bottom: 20px;">Recibo do pagador</div>
+            <div class="noprint info">
+                <div class="info-qrcode" >
+                    <table class="table-qrcode" cellpadding="0" cellspacing="0" border="0">
+                        <tbody>
+                        <tr>
+                            <td valign="bottom" colspan="8" class="td-instrucao">
+                                <div class="instrucao">
+                                    <h2>Instruções de Impressão</h2>                   
+                                    <ul>
+                                        <li>Imprima em impressora jato de tinta (ink jet) ou laser em qualidade normal ou alta (Não use modo econômico).</li>
+                                        <li>Utilize folha A4 (210 x 297 mm) ou Carta (216 x 279 mm) e margens mínimas à esquerda e à direita do formulário.</li>
+                                        <li>Corte na linha indicada. Não rasure, risque, fure ou dobre a região onde se encontra o código de barras.</li>
+                                        <li>Caso não apareça o código de barras no final, pressione F5 para atualizar esta tela.</li>
+                                        <li>Caso tenha problemas ao imprimir, copie a sequencia numérica abaixo e pague no caixa eletrônico ou no internet banking:</li>
+                                    </ul>
+                                </div>                        
+                            </td>
+                            <td valign="bottom" class="td-qrcode">
+                                    <?php if ($qrcode) : ?>
+                                    <div  class="qrcode">
+                                        <h2>Qrcode</h2> 
+                                        <img alt="qrcode" src="<?php echo $qrcode; ?>" width="70" height="70"/>
+                                    </div>            
+                                    <?php endif ?>                        
+                            </td>
+                        </tr>
+                    </table> 
+                </div> 
+                <span class="header">Linha Digitável: <?php echo $linha_digitavel; ?></span>
+                <?php if ($valor_documento) : ?><span class="header">Valor: R$ <?php echo $valor_documento; ?></span><?php endif ?>
+                <?php if ($pagamento_minimo) : ?><span class="header">Pagamento mínimo: R$ <?php echo $pagamento_minimo; ?></span><?php endif ?>
+                <br>
+            <div class="linha-pontilhada" style="margin-bottom: 20px;">Recibo do sacado</div>
         </div>
         <?php endif ?>
 
@@ -70,7 +89,7 @@
         <table class="table-boleto" cellpadding="0" cellspacing="0" border="0">
             <tbody>
             <tr>
-                <td valign="bottom" colspan="8" class="noborder nopadding">
+                <td valign="bottom" colspan="5" class="noborder nopadding">
                     <div class="logocontainer">
                         <div class="logobanco">
                             <img src="<?php echo $logo_banco; ?>" alt="logotipo do banco">
