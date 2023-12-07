@@ -13,3 +13,4 @@ nbproject/
 vendor
 boleto.pdf
 index.php
+composer.lock
